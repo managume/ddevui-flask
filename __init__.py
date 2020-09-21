@@ -1,24 +1,39 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from werkzeug.security import generate_password_hash
+from dotenv import load_dotenv
+import os
 
-app = Flask(__name__)
+load_dotenv()
 
 db = SQLAlchemy()
 
-app.config['FLASK_DEBUG'] = 1
-app.config['SECRET_KEY'] = 'rtdpWrc3e7XAkE4Lg7ocem0L7ugwA76y'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+def create_app():
+    app = Flask(__name__)
 
-db.init_app(app)
+    app.config['FLASK_DEBUG'] = os.getenv('FLASK_DEBUG')
+    app.config['FLASK_ENV'] = os.getenv('FLASK_ENV')
+    app.config['SECRET_KEY'] = 'rtdpWrc3e7XAkE4Lg7ocem0L7ugwA76y'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from .auth import auth as auth_blueprint
-app.register_blueprint(auth_blueprint)
+    db.init_app(app)
 
-from .main import main as main_blueprint
-app.register_blueprint(main_blueprint)
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
 
+    from .models import User
 
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+        
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
 
-if __name__ == "__main__":
-    app.run()
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    return app
