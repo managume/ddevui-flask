@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block main %}
+<div x-data="app()">
+    <ul class="list-none">
+        <template x-for="project in data">
+            <li class="py-1 text-gray-700" x-text="project"></li>
+        </template>
+    </ul>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    function app() {
+        return {
+            data: JSON.parse(`{{projects}}`)
+        }
+    }
+</script>
+{% endblock %}
