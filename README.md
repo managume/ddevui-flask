@@ -1,4 +1,4 @@
-# ddev**ui**
+# ddevui
 
 ### Levantar en entorno virtual
 ```sh
@@ -14,6 +14,6 @@ pip install -r requirements.txt
 cd ..
 python
 >>> from ddevui import db,create_app
->>> db.create_all(app=create_app)
+>>> db.create_all(app=create_app())
 ```
 
