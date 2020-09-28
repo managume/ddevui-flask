@@ -1,5 +1,7 @@
 # ddevui
 
+**:loudspeaker: ¡DEPRECATED/OBSOLETO! Actualmente vigente la versión en desarrollo con NodeJS https://github.com/managume/ddevui**
+
 ### Levantar en entorno virtual
 ```sh
 git clone
